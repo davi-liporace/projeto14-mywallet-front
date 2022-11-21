@@ -16,7 +16,6 @@ export default function SignIn() {
       
       setUser(res.data)
       navigate("/home")
-      console.log(user.email)
     })
     .catch((res)=> alert(res.data))
   }

@@ -14,7 +14,7 @@ function registraEntrada(e){
 
 function enviaEntrada(e){
     e.preventDefault()
-    const config = {headers:{"Authorization":`Bearer ${user.token}`}}
+    const config = {headers:{Authorization:`Bearer ${user.token}`}}
     axios.post("http://localhost:5000/entradas",formulario,config)
     .then(
         navigate("/home")

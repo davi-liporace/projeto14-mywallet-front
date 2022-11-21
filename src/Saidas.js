@@ -19,7 +19,6 @@ export default function Saidas() {
     axios
       .post("http://localhost:5000/saidas", formulario, config)
       .then(navigate("/home"));
-      console.log(formulario.email)
   }
 
   return (
