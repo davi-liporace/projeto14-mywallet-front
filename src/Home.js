@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import logoutImg from "./log-out-outline.svg";
+import logoutImg from "./Vector.png";
+import AddImg from "./ant-design_plus-circle-outlined.png"
+import DeleteImg from "./ant-design_minus-circle-outlined.png"
 
 export default function Home() {
   return (
@@ -20,10 +22,14 @@ export default function Home() {
           <h2>lancamento</h2>
           <h3>18,00</h3>
         </Lancamento>
+       
+        
       </ContainerLancamentos>
+      <TotalLancamentos><h1>SALDO</h1><h2>2580,00</h2></TotalLancamentos>
       <ContainerBotoes>
         <Link to="/entradas">
           <BotaoEntradas>
+            <img src={AddImg}/>
             <h1>
               Nova <br />
               Entrada
@@ -31,22 +37,55 @@ export default function Home() {
           </BotaoEntradas>
         </Link>
         <Link to="/saidas">
-          <BotaoSaidas>
+          <BotaoEntradas>
+            <img src={DeleteImg}/>
             <h1>
               Nova
               <br />
               Saida
             </h1>
-          </BotaoSaidas>
+          </BotaoEntradas>
         </Link>
       </ContainerBotoes>
     </Corpo>
   );
 }
 
+
+
+const TotalLancamentos = styled.div`
+display: flex;
+width: 326px;
+background-color: white;
+height: 20px;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius:5px;
+margin-top: -5px;
+z-index: 1;
+position: relative;
+h1{
+  font-family: 'Raleway';
+font-style: normal;
+font-weight: 700;
+font-size: 17px;
+line-height: 20px;
+position: absolute;
+left: 5%;
+}
+h2{
+  position: absolute;
+  right: 5%;
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+font-size: 17px;
+line-height: 20px;
+color: #03AC00;
+}
+`
 const ContainerBotoes = styled.div`
   display: flex;
-  width: 80%;
+  width: 90%;
   justify-content: space-between;
 `;
 
@@ -75,8 +114,12 @@ const ContainerLancamentos = styled.div`
   align-items: center;
   margin-top: 30px;
   width: 326px;
-  height: 446px;
+  height: 426px;
   border-radius: 5px;
+  box-sizing: border-box;
+  padding-bottom: 13px;
+  position: relative;
+  overflow: scroll;
 `;
 
 const Lancamento = styled.div`
@@ -130,6 +173,7 @@ const BotaoEntradas = styled.div`
   box-sizing: border-box;
   padding-left: 10px;
   padding-bottom: 9px;
+  position: relative;
   h1 {
     color: white;
     font-size: 17px;
@@ -138,27 +182,9 @@ const BotaoEntradas = styled.div`
     line-height: 20px;
     font-family: "Raleway";
   }
-`;
-const BotaoSaidas = styled.div`
-  width: 155px;
-  height: 114px;
-  background: #a328d6;
-  border-radius: 4.63636px;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  margin-bottom: 50px;
-  box-sizing: border-box;
-  padding-left: 10px;
-  padding-bottom: 9px;
-  h1 {
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    font-size: 17px;
-    line-height: 20px;
-    font-family: "Raleway";
+  img{
+    position: absolute;
+    top: 5%;
   }
 `;
+

@@ -26,7 +26,7 @@ export default function SignUp (){
         
         />
         <BotaoLogin><h1>Cadastrar</h1></BotaoLogin>
-        <Link to = "/"><BotaoSignUp>Primeira vez? Cadastre-se! </BotaoSignUp></Link>
+        <Link to = "/"><BotaoSignUp>Já tem uma conta? Entre agora! </BotaoSignUp></Link>
 
 
     </ContainerLogin></Corpo>
