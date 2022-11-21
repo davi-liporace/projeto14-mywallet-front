@@ -3,29 +3,64 @@ import styled from "styled-components";
 import logoutImg from "./Vector.png";
 import AddImg from "./ant-design_plus-circle-outlined.png"
 import DeleteImg from "./ant-design_minus-circle-outlined.png"
+import AuthContext from "./auth";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+
 
 export default function Home() {
+  let lancamentosFiltrados = []
+  const {user, setUser} = useContext(AuthContext)
+  const [lancamentos, setLancamentos] = useState([])
+  const [saldo, setSaldo] = useState(0)
+  function somaSaldo(e){
+    let total = 0
+    for (let i = 0;i<e.length; i++){
+      if(e[i].tipo==="entrada"){
+        e[i].valor =+e[i].valor
+        total += e[i].valor
+      }
+      else if(e[i].tipo === "saida"){
+        e[i].valor =+e[i].valor
+        total -= e[i].valor
+      }
+    } setSaldo(total)
+  }
+  useEffect(()=> {
+    if (!user){
+      return
+    }
+    const config = {headers:{"Authorization":`Bearer ${user.token}`}}
+    axios.get("http://localhost:5000/lancamentos",config)
+    .then((res)=> {
+      somaSaldo(res.data)
+      setLancamentos(res.data)
+      setUser({...user,lancamentos:res.data})
+      lancamentosFiltrados = lancamentos.filter(e => e.tokensessao == user.token);
+    })
+    .catch((res)=> alert(res.data))
+  },[lancamentos])
+
   return (
     <Corpo>
       <MensagemHeader>
-        <h1>Olá Fulano</h1>
+        <h1>Olá, {user.nome}</h1>
         <img src={logoutImg} />
       </MensagemHeader>
       <ContainerLancamentos>
-        <Lancamento>
-          <h1>14/11</h1>
-          <h2>lancamento</h2>
-          <h3>18,00</h3>
+      {
+       lancamentos.map((l)=> (
+        <Lancamento color={l.tipo} >
+          <h1>{l.data}</h1>
+          <h2>{l.descricao}</h2>
+          <h3>{l.valor.toString().replaceAll(".",",")}</h3>
         </Lancamento>
-        <Lancamento>
-          <h1>14/11</h1>
-          <h2>lancamento</h2>
-          <h3>18,00</h3>
-        </Lancamento>
+        ))}
+
        
         
       </ContainerLancamentos>
-      <TotalLancamentos><h1>SALDO</h1><h2>2580,00</h2></TotalLancamentos>
+      <TotalLancamentos color={saldo}><h1>SALDO</h1><h2>{saldo.toFixed(2).toString().replaceAll(".",",")}</h2></TotalLancamentos>
       <ContainerBotoes>
         <Link to="/entradas">
           <BotaoEntradas>
@@ -80,7 +115,7 @@ h2{
   font-weight: 400;
 font-size: 17px;
 line-height: 20px;
-color: #03AC00;
+color: ${props=>props.color>0?"#03AC00":"red"};
 }
 `
 const ContainerBotoes = styled.div`
@@ -148,7 +183,7 @@ const Lancamento = styled.div`
     font-size: 16px;
     line-height: 19px;
     text-align: right;
-    color: #03ac00;
+    color:${props=>props.color === "saida"?"red":"#03ac00"};
     position: absolute;
     right: 0%;
   }

@@ -1,25 +1,53 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import AuthContext from "./auth";
 
 export default function SignIn() {
+  const [formulario, setFormulario] = useState({email:"",senha:""})
+  const {user, setUser} = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  function enviaUsuario(e){
+    e.preventDefault()
+    axios.post("http://localhost:5000/",formulario)
+    .then((res) => {
+      
+      setUser(res.data)
+      navigate("/home")
+      console.log(user.email)
+    })
+    .catch((res)=> alert(res.data))
+  }
+
+  function registraUsuario(e){
+    setFormulario({...formulario,[e.target.name]:e.target.value})
+  }
+
+
   return (
     <Corpo>
       <Titulo>MyWallet</Titulo>
-      <ContainerLogin>
+      <ContainerLogin onSubmit={enviaUsuario}>
         <input
           placeholder="e-mail"
           data-identifier="input-email"
           type="email"
           name="email"
+          value={formulario.email}
+          onChange={registraUsuario}
         />
         <input
           placeholder="senha"
           data-identifier="input-password"
           type="password"
-          name="password"
+          name="senha"
+          value={formulario.senha}
+          onChange={registraUsuario}
         />
 
-        <BotaoLogin>
+        <BotaoLogin type="submit" >
           <h1>Login</h1>
         </BotaoLogin>
         <Link to = "/signup"><BotaoSignIn>Primeira vez? Cadastre-se! </BotaoSignIn></Link>
@@ -40,7 +68,7 @@ const Titulo = styled.div`
   margin-top: 45%;
   justify-content: center;
 `;
-const ContainerLogin = styled.div`
+const ContainerLogin = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +82,7 @@ const ContainerLogin = styled.div`
   }
 `;
 
-const BotaoLogin = styled.div`
+const BotaoLogin = styled.button`
   width: 303px;
   height: 45px;
   background: #a328d6;
