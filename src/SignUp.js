@@ -1,31 +1,66 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
 
 export default function SignUp (){
+const [formulario, setFormulario] = useState({nome:"", email:"",senha:""})
+const navigate = useNavigate()
+
+function registraUsuario (e){
+  setFormulario({...formulario,[e.target.name]:e.target.value})
+}
+
+function enviaRegistro (e){
+  e.preventDefault()
+  if(formulario.senha !== formulario.ConfirmaSenha){
+    console.log(formulario)
+    alert("As senhas precisam ser iguais")
+  }
+  else{
+    delete formulario.ConfirmaSenha
+    const body = {...formulario}
+    axios.post("http://localhost:5000/sign-up", body)
+    .then((res)=> {
+      navigate("/")
+    } )
+    .catch((res) => alert(res))
+  }
+}
+
     return(<Corpo><Titulo>MyWallet</Titulo>
-        <ContainerLogin >
+        <ContainerLogin onSubmit={enviaRegistro} >
             <input placeholder="Nome" data-identifier="input-name"
         type="text"
-        name="name"
+        name="nome"
+        value={formulario.nome}
+        onChange={registraUsuario}
        
         />
         <input placeholder="e-mail" data-identifier="input-email"
         type="email"
         name="email"
+        value={formulario.email}
+        onChange={registraUsuario}
         
         />
         <input placeholder="senha" data-identifier="input-password"
         type="password"
-        name="password"
+        name="senha"
+        value={formulario.senha}
+        onChange={registraUsuario}
         
         />
                 
         <input placeholder="Confirme a senha" data-identifier="input-photo"
         type="password"
-        name="password"
+        name="ConfirmaSenha"
+        value={formulario.ConfirmaSenha}
+        onChange={registraUsuario}
         
         />
-        <BotaoLogin><h1>Cadastrar</h1></BotaoLogin>
+        <BotaoLogin type="submit" ><h1>Cadastrar</h1></BotaoLogin>
         <Link to = "/"><BotaoSignUp>Já tem uma conta? Entre agora! </BotaoSignUp></Link>
 
 
@@ -46,7 +81,7 @@ const Corpo = styled.div`
   align-items: center;
 `;
 
-const ContainerLogin = styled.div`
+const ContainerLogin = styled.form`
 display:flex ;
 flex-direction: column;
 align-items: center;
@@ -60,7 +95,7 @@ color: #D4D4D4;
 }
 `
 
-const BotaoLogin = styled.div`
+const BotaoLogin = styled.button`
 width: 303px;
   height: 45px;
   background: #a328d6;
